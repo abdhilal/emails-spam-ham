@@ -1,0 +1,5 @@
+# requirements.txt
+flask
+transformers
+torch
+gunicorn # هذا الخادم ضروري لتشغيل تطبيق Flask في بيئة الإنتاج
