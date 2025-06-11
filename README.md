@@ -42,7 +42,7 @@ The core of this classifier is a fine-tuned **`distilbert-base-uncased`** model.
 ├── spam_classifier_finetuning.py # (Your training script, if kept separate from app.py)
 └── README.md                   # This documentation file
 
-  ``` <pre> 
+  ``` 
 
 
 *Note: Adjust the structure above to accurately reflect your project's actual file organization.*
