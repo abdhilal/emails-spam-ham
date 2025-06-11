@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كاشف السبام (Spam Detector)</title>
-    <!-- تضمين Tailwind CSS من CDN -->
+    <title>Spam Detector</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* الخط الأساسي وتعيين بعض الأنماط الافتراضية */
+        /* Base font and some default styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* لون خلفية داكن */
-            color: #e2e8f0; /* لون نص فاتح */
+            background-color: #0f172a; /* Dark background color */
+            color: #e2e8f0; /* Light text color */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,25 +19,25 @@
             box-sizing: border-box;
         }
 
-        /* تحسينات للـ textarea */
+        /* Textarea improvements */
         textarea {
-            resize: vertical; /* السماح بتغيير حجم النص عموديًا فقط */
+            resize: vertical; /* Allow vertical resizing only */
             min-height: 150px;
         }
     </style>
 </head>
 <body>
     <div class="max-w-3xl w-full p-8 bg-gray-800 rounded-lg shadow-2xl space-y-6">
-        <h1 class="text-4xl font-bold text-center text-indigo-400 mb-6">كاشف البريد المزعج</h1>
+        <h1 class="text-4xl font-bold text-center text-indigo-400 mb-6">Spam Detector</h1>
 
         <div class="space-y-4">
             <label for="emailInput" class="block text-lg font-medium text-gray-300">
-                أدخل نص البريد الإلكتروني هنا:
+                Enter email text here:
             </label>
             <textarea
                 id="emailInput"
                 class="w-full p-4 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="مثال: مبروك! لقد فزت بمليون دولار. اضغط هنا للمطالبة بالجائزة!"
+                placeholder="Example: Congratulations! You've won a million dollars. Click here to claim your prize!"
             ></textarea>
         </div>
 
@@ -47,60 +45,56 @@
             id="predictButton"
             class="w-full bg-indigo-600 text-white font-semibold py-3 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105"
         >
-            توقع التصنيف
+            Predict Classification
         </button>
 
-        <!-- منطقة عرض النتائج والتحميل -->
         <div id="resultsArea" class="mt-6 p-6 bg-gray-700 rounded-lg shadow-inner hidden">
-            <p class="text-lg font-medium text-gray-200">النتيجة:</p>
+            <p class="text-lg font-medium text-gray-200">Result:</p>
             <p id="predictionText" class="text-3xl font-bold mt-2"></p>
-            <p id="confidenceText" class="text-md text-gray-400 mt-1"></p>
         </div>
 
         <div id="loadingIndicator" class="hidden text-center mt-6">
             <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-t-4 border-indigo-500 border-opacity-75"></div>
-            <p class="text-indigo-300 mt-2">جاري التحميل... (قد يستغرق بعض الوقت لأول مرة)</p>
+            <p class="text-indigo-300 mt-2">Loading... (May take some time for the first time)</p>
         </div>
 
-        <!-- رسالة خطأ (مخفية افتراضياً) -->
         <div id="errorMessage" class="hidden mt-6 p-4 bg-red-800 text-red-100 rounded-lg">
-            <p class="font-bold">حدث خطأ:</p>
+            <p class="font-bold">An error occurred:</p>
             <p id="errorDetails"></p>
         </div>
     </div>
 
     <script>
-        // احصل على عناصر HTML
+        // Get HTML elements
         const emailInput = document.getElementById('emailInput');
         const predictButton = document.getElementById('predictButton');
         const resultsArea = document.getElementById('resultsArea');
         const predictionText = document.getElementById('predictionText');
-        const confidenceText = document.getElementById('confidenceText');
         const loadingIndicator = document.getElementById('loadingIndicator');
         const errorMessage = document.getElementById('errorMessage');
         const errorDetails = document.getElementById('errorDetails');
 
-        // رابط الـ API الخاص بك على Hugging Face Spaces
-        // تأكد من أن هذا الرابط هو الصحيح لـ Space الخاص بك
+        // Your Hugging Face Spaces API link
+        // Make sure this link is correct for your Space
         const API_URL = 'https://abdrhilal-ai-emails.hf.space/predict';
 
         predictButton.addEventListener('click', async () => {
             const emailText = emailInput.value.trim();
 
-            // إخفاء النتائج والخطأ ومؤشر التحميل السابقة
+            // Hide previous results, errors, and loading indicator
             resultsArea.classList.add('hidden');
             loadingIndicator.classList.add('hidden');
             errorMessage.classList.add('hidden');
 
             if (!emailText) {
-                errorDetails.textContent = 'الرجاء إدخال نص البريد الإلكتروني.';
+                errorDetails.textContent = 'Please enter email text.';
                 errorMessage.classList.remove('hidden');
                 return;
             }
 
-            // إظهار مؤشر التحميل
+            // Show loading indicator
             loadingIndicator.classList.remove('hidden');
-            predictButton.disabled = true; // تعطيل الزر أثناء التحميل
+            predictButton.disabled = true; // Disable the button while loading
 
             try {
                 const response = await fetch(API_URL, {
@@ -118,23 +112,22 @@
 
                 const data = await response.json();
 
-                // عرض النتائج
-                predictionText.textContent = data.prediction === 'spam' ? 'سبام (Spam)' : ' مرغوب فيه (Ham)';
-                predictionText.classList.remove('text-green-400', 'text-red-400'); // إزالة الألوان السابقة
+                // Display results
+                predictionText.textContent = data.prediction === 'spam' ? 'Spam' : 'Ham';
+                predictionText.classList.remove('text-green-400', 'text-red-400'); // Remove previous colors
                 if (data.prediction === 'spam') {
                     predictionText.classList.add('text-red-400');
                 } else {
                     predictionText.classList.add('text-green-400');
                 }
-                confidenceText.textContent = `الثقة: ${(data.confidence * 100).toFixed(2)}%`;
                 resultsArea.classList.remove('hidden');
 
             } catch (error) {
                 console.error('Error during prediction:', error);
-                errorDetails.textContent = `تعذر الاتصال بالخادم أو حدث خطأ: ${error.message}`;
+                errorDetails.textContent = `Could not connect to the server or an error occurred: ${error.message}`;
                 errorMessage.classList.remove('hidden');
             } finally {
-                // إخفاء مؤشر التحميل وتمكين الزر
+                // Hide loading indicator and enable the button
                 loadingIndicator.classList.add('hidden');
                 predictButton.disabled = false;
             }
