@@ -45,7 +45,6 @@ The core of this classifier is a fine-tuned **`distilbert-base-uncased`** model.
   ``` 
 
 
-*Note: Adjust the structure above to accurately reflect your project's actual file organization.*
 
 ---
 
