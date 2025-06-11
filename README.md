@@ -83,7 +83,7 @@ pip install -r requirements.txt
 
 python app.py
 
-## How to Run (Live Demo)
+How to Run (Live Demo)
 This section describes how users can access and try your live deployed application.
 
 Live Web Interface: You can test the Email Spam/Ham Classifier directly via its hosted web interface: https://abdhilal.github.io/emails-spam-ham/
@@ -94,7 +94,6 @@ Contact
 For any questions, feedback, or collaborations, feel free to reach out:
 
 Your Name: Abdalrhman Hilal
-Email: [Your Email Here] (Remember to add your actual email)
 LinkedIn: https://www.linkedin.com/in/abdalrhman-hilal/
 Portfolio: https://abdr-hilal.ct.ws/
-
+<!-- end list -->
