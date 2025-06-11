@@ -24,7 +24,7 @@ The core of this classifier is a fine-tuned **`distilbert-base-uncased`** model.
 ### **Project Structure**
 
 
-<pre> ```
+```
 ├── app.py                      # (Or your main Flask/FastAPI backend API script)
 ├── model/                      # Directory to store the fine-tuned model and tokenizer
 │   ├── config.json
